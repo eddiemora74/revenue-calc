@@ -1,38 +1,8 @@
 import Layout from "../components/layout";
 import { useState, useEffect } from "react";
 import currency from "../utils/currency";
-
-const dineroOptions = {
-  currency: "USD",
-  precision: 2,
-};
-
-const initialDataPoints = [
-  {
-    title: "Per Day",
-    key: "day",
-    value: 0,
-    multiplier: (frequency) => 1 / frequency,
-  },
-  {
-    title: "Per Week",
-    key: "week",
-    value: 0,
-    multiplier: (frequency) => 7 / frequency,
-  },
-  {
-    title: "Per Month",
-    key: "month",
-    value: 0,
-    multiplier: (frequency) => 30 / frequency,
-  },
-  {
-    title: "Per Year",
-    key: "year",
-    value: 0,
-    multiplier: (frequency) => 365 / frequency,
-  },
-];
+import ExpensesCard from "../components/expenses";
+import initialDataPoints from "../utils/initialDataPoints";
 
 export default function Home() {
   const [dataPoints, setDataPoints] = useState(initialDataPoints);
@@ -40,35 +10,113 @@ export default function Home() {
   const [subscriptionCost, setSubscriptionCost] = useState(0.0);
   const [frequency, setFrequency] = useState(1);
   const [baseCost, setBaseCost] = useState(0.0);
+  const [expenses, setExpenses] = useState([]);
+
+  useEffect(() => {
+    sessionStorage.getItem("dataPoints")
+      ? setDataPoints(JSON.parse(sessionStorage.getItem("dataPoints")))
+      : "";
+    sessionStorage.getItem("subscriberCount")
+      ? setSubscriberCount(sessionStorage.getItem("subscriberCount"))
+      : "";
+    sessionStorage.getItem("subscriptionCost")
+      ? setSubscriptionCost(sessionStorage.getItem("subscriptionCost"))
+      : "";
+    sessionStorage.getItem("frequency")
+      ? setFrequency(sessionStorage.getItem("frequency"))
+      : "";
+    sessionStorage.getItem("baseCost")
+      ? setBaseCost(sessionStorage.getItem("baseCost"))
+      : "";
+    sessionStorage.getItem("expenses")
+      ? setExpenses(JSON.parse(sessionStorage.getItem("expenses")))
+      : "";
+  }, []);
 
   useEffect(() => {
     setBaseCost(subscriptionCost * subscriberCount);
+    sessionStorage.setItem("baseCost", subscriptionCost * subscriberCount);
   }, [subscriberCount, subscriptionCost]);
 
   useEffect(() => {
+    const totalExpenses = returnTotalExpenses();
     const pointsCopy = dataPoints.map((point) => {
-      point.value = baseCost * point.multiplier(frequency);
+      point.value =
+        baseCost * (point.multiplier / frequency) -
+        totalExpenses * (point.multiplier / 365);
       return point;
     });
 
     setDataPoints(pointsCopy);
-  }, [baseCost, frequency]);
+    sessionStorage.setItem("dataPoints", JSON.stringify(pointsCopy, null, 4));
+  }, [baseCost, frequency, expenses]);
+
+  function addExpense() {
+    const newExpense = {
+      value: 0,
+      frequency: 1,
+    };
+    setExpenses([...expenses, newExpense]);
+    sessionStorage.setItem(
+      "expenses",
+      JSON.stringify([...expenses, newExpense], null, 4)
+    );
+  }
+
+  function deleteExpense(index) {
+    const expenseCopy = expenses.filter((e) => expenses.indexOf(e) !== index);
+    setExpenses(expenseCopy);
+    sessionStorage.setItem("expenses", JSON.stringify(expenseCopy, null, 4));
+  }
+
+  function updateExpense(index, attribute, value) {
+    const expenseCopy = [...expenses];
+    expenseCopy[index][attribute] = value;
+    setExpenses(expenseCopy);
+    sessionStorage.setItem("expenses", JSON.stringify(expenseCopy, null, 4));
+  }
+
+  function returnTotalExpenses() {
+    if (expenses.length === 0) return 0;
+    return expenses
+      .map((e) => {
+        return e.value * (365 / e.frequency);
+      })
+      .reduce((a, b) => {
+        return a + b;
+      });
+  }
+
+  function resetAll() {
+    setDataPoints(initialDataPoints);
+    setSubscriberCount(0);
+    setSubscriptionCost(0.0);
+    setFrequency(1);
+    setBaseCost(0.0);
+    setExpenses([]);
+    sessionStorage.clear();
+  }
 
   return (
     <Layout>
-      <div className="container mt-5">
+      <div className="container mt-3">
+        <div className="row justify-content-end my-3">
+          <button className="btn btn-warning btn-sm mx-3" onClick={resetAll}>
+            Clear
+          </button>
+        </div>
         <div className="card-deck">
           {dataPoints.map((point) => (
             <div className="card" key={point.key}>
               <div className="card-body">
                 <h5 className="card-title text-center">{point.title}</h5>
-                <h2 className="text-center" style={{ fontFamily: "Monospace" }}>
+                <p className="text-center revenue-number">
                   {currency(point.value).format()}
-                </h2>
+                </p>
                 <p className="card-text text-center">
                   <small className="text-muted">
                     {currency(
-                      subscriptionCost * point.multiplier(frequency)
+                      subscriptionCost * (point.multiplier / frequency)
                     ).format()}{" "}
                     per user
                   </small>
@@ -82,7 +130,7 @@ export default function Home() {
           <div className="col-sm-6">
             <div className="card">
               <div className="card-body">
-                <h3 className="card-title text-center">Subscriber Model</h3>
+                <h3 className="card-title text-center">Subscription Model</h3>
                 <form onSubmit={(e) => e.preventDefault()}>
                   <div className="form-group row">
                     <label
@@ -98,7 +146,13 @@ export default function Home() {
                         id="subscriber-count"
                         placeholder="Enter number..."
                         value={subscriberCount}
-                        onChange={(e) => setSubscriberCount(e.target.value)}
+                        onChange={(e) => {
+                          setSubscriberCount(e.target.value);
+                          sessionStorage.setItem(
+                            "subscriberCount",
+                            e.target.value
+                          );
+                        }}
                         min={0}
                       />
                     </div>
@@ -123,7 +177,13 @@ export default function Home() {
                         value={subscriptionCost}
                         step={0.01}
                         min={0}
-                        onChange={(e) => setSubscriptionCost(e.target.value)}
+                        onChange={(e) => {
+                          setSubscriptionCost(e.target.value);
+                          sessionStorage.setItem(
+                            "subscriptionCost",
+                            e.target.value
+                          );
+                        }}
                       />
                     </div>
                   </div>
@@ -139,9 +199,12 @@ export default function Home() {
                         name="subscribe-frequency"
                         id="subscribe-frequency"
                         className="custom-select"
-                        onChange={(e) => setFrequency(e.target.value)}
+                        onChange={(e) => {
+                          setFrequency(e.target.value);
+                          sessionStorage.setItem("frequency", e.target.value);
+                        }}
                       >
-                        <option selected value={1}>
+                        <option defaultValue value={1}>
                           Per day
                         </option>
                         <option value={7}>Per week</option>
@@ -153,6 +216,15 @@ export default function Home() {
                 </form>
               </div>
             </div>
+          </div>
+          <div className="col-sm-6">
+            <ExpensesCard
+              fields={expenses}
+              addExpense={addExpense}
+              deleteExpense={deleteExpense}
+              updateExpense={updateExpense}
+              totalExpenses={() => returnTotalExpenses()}
+            />
           </div>
         </div>
       </div>

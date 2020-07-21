@@ -1,0 +1,13 @@
+.revenue-number {
+  font-family: monospace;
+  font-size: 1.5rem;
+  font-weight: 300;
+}
+
+body {
+  background: linear-gradient(rgb(0,0,0,0.2), rgb(0,0,0,0.2)), url("/y-so-serious-white.png") repeat;
+}
+
+.card, .btn-warning {
+  box-shadow: 5px 5px 5px rgb(0,0,0,0.25);
+}

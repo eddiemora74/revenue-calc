@@ -127,7 +127,7 @@ export default function Home() {
         </div>
         <hr className="my-4" />
         <div className="row">
-          <div className="col-sm-6">
+          <div className="col-sm-6 mb-3">
             <div className="card">
               <div className="card-body">
                 <h3 className="card-title text-center">Subscription Model</h3>
@@ -217,7 +217,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="col-sm-6">
+          <div className="col-sm-6 mb-3">
             <ExpensesCard
               fields={expenses}
               addExpense={addExpense}

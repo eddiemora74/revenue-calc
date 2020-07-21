@@ -9,8 +9,10 @@ export default function ExpensesCard({
 }) {
   return (
     <div className="card">
+      <div className="card-header text-center">
+        <h5>Expenses</h5>
+      </div>
       <div className="card-body">
-        <h5 className="text-center card-title">Expenses</h5>
         <form onSubmit={(e) => e.preventDefault()}>
           {fields.map((field, i) => (
             <div className="form-group row" key={i}>
@@ -62,7 +64,7 @@ export default function ExpensesCard({
                   </select>
                   <button
                     type="button"
-                    className="close col"
+                    className="close px-2 mx-2"
                     aria-label="Delete"
                     onClick={() => deleteExpense(i)}
                   >

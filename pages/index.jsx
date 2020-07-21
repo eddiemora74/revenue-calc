@@ -107,13 +107,15 @@ export default function Home() {
         </div>
         <div className="card-deck">
           {dataPoints.map((point) => (
-            <div className="card" key={point.key}>
+            <div className="card text-center" key={point.key}>
+              <div className="card-header">{point.title}</div>
               <div className="card-body">
-                <h5 className="card-title text-center">{point.title}</h5>
-                <p className="text-center revenue-number">
+                <span className="revenue-number">
                   {currency(point.value).format()}
-                </p>
-                <p className="card-text text-center">
+                </span>
+              </div>
+              <div className="card-footer">
+                <p className="card-text">
                   <small className="text-muted">
                     {currency(
                       subscriptionCost * (point.multiplier / frequency)
@@ -125,12 +127,14 @@ export default function Home() {
             </div>
           ))}
         </div>
-        <hr className="my-4" />
+        <hr className="my-4 " />
         <div className="row">
           <div className="col-sm-6 mb-3">
             <div className="card">
+              <div className="card-header text-center">
+                <h5>Subscription Model</h5>
+              </div>
               <div className="card-body">
-                <h3 className="card-title text-center">Subscription Model</h3>
                 <form onSubmit={(e) => e.preventDefault()}>
                   <div className="form-group row">
                     <label

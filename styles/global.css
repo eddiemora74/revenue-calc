@@ -11,3 +11,16 @@ body {
 .card, .btn-warning {
   box-shadow: 5px 5px 5px rgb(0,0,0,0.25);
 }
+
+hr {
+  border-top: 4px solid rgb(0,0,0,0.15);
+}
+
+.card-header {
+  background: #343a40 !important;
+  color: white;
+}
+
+.card {
+  border: none;
+}

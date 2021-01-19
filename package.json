@@ -1,6 +1,6 @@
 {
   "name": "donation-calc",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,7 +10,7 @@
   "dependencies": {
     "bootstrap": "^4.5.0",
     "lodash": "^4.17.19",
-    "next": "9.4.4",
+    "next": "^10.0.5",
     "react": "16.13.1",
     "react-dom": "16.13.1"
   }

@@ -19,15 +19,7 @@ export default function NavBar() {
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        <div className="collapse navbar-collapse" id="revenuePages">
-          {/* <ul className="navbar-nav mr-auto">
-            <li className="nav-item active">
-              <Link href="/">
-                <a className="nav-link">Subscribers</a>
-              </Link>
-            </li>
-          </ul> */}
-        </div>
+        <div className="collapse navbar-collapse" id="revenuePages"></div>
       </div>
     </nav>
   );

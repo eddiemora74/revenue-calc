@@ -1,6 +1,9 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 
-export default function NavBar() {
+function NavBar() {
+  const router = useRouter();
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container">
@@ -19,8 +22,24 @@ export default function NavBar() {
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        <div className="collapse navbar-collapse" id="revenuePages"></div>
+        <div className="collapse navbar-collapse" id="revenuePages">
+          <ul className="navbar-nav mr-auto">
+            <li className="nav-item">
+              <Link href="/loan">
+                <a
+                  className={
+                    router.pathname === "/loan" ? "nav-link active" : "nav-link"
+                  }
+                >
+                  Loan Payoff Calc
+                </a>
+              </Link>
+            </li>
+          </ul>
+        </div>
       </div>
     </nav>
   );
 }
+
+export default NavBar;

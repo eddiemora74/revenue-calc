@@ -1,19 +1,27 @@
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu+Mono&display=swap");
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: linear-gradient(rgb(0, 0, 0, 0.2), rgb(0, 0, 0, 0.2)),
+    url("/y-so-serious-white.png") repeat;
+}
+
 .revenue-number {
   font-family: monospace;
   font-size: 1.5rem;
   font-weight: 300;
 }
 
-body {
-  background: linear-gradient(rgb(0,0,0,0.2), rgb(0,0,0,0.2)), url("/y-so-serious-white.png") repeat;
-}
-
-.card, .btn-warning {
-  box-shadow: 5px 5px 5px rgb(0,0,0,0.25);
+.card,
+.btn-warning {
+  box-shadow: 5px 5px 5px rgb(0, 0, 0, 0.25);
 }
 
 hr {
-  border-top: 4px solid rgb(0,0,0,0.15);
+  border-top: 4px solid rgb(0, 0, 0, 0.15);
 }
 
 .card-header {
@@ -23,4 +31,19 @@ hr {
 
 .card {
   border: none;
+}
+
+.ubuntu-font {
+  font-family: "Ubuntu Mono", monospace;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.disabled-tab {
+  pointer-events: none;
+  text-decoration: line-through;
+  font-style: italic;
+  opacity: 0.5;
 }
